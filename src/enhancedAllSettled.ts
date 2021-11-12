@@ -39,9 +39,11 @@ const segregateInputObjectsByStatus =
   };
 
 export const enhancedAllSettled =
-  <inputType, outputType>(inputObjects: inputType[]) =>
-  async (
+  <inputType, outputType>(
     promiseToApply: (object: inputType) => Promise<outputType>
+  ) =>
+  async (
+    inputObjects: inputType[]
   ): Promise<EnhancedAllSettledResult<inputType, outputType>> => {
     const promiseSettledResults = await Promise.all(
       inputObjects.map(settlePromise(promiseToApply))
