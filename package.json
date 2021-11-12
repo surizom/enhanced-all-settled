@@ -1,6 +1,6 @@
 {
   "name": "enhanced-all-settled",
-  "version": "0.0.0-development",
+  "version": "1.0.1",
   "description": "A better implementation of Javascript Promise.allSettled",
   "main": "./lib/src/index.js",
   "files": [
