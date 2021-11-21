@@ -45,15 +45,20 @@ const segregateInputObjectsByStatus =
     };
   };
 
+export type EnhancedAllSettledOptions = {
+  logStack?: boolean;
+};
+
 export const enhancedAllSettled =
   <inputType, outputType>(
-    promiseToApply: (object: inputType) => Promise<outputType>
+    promiseToApply: (object: inputType) => Promise<outputType>,
+    options?: EnhancedAllSettledOptions
   ) =>
   async (
     inputObjects: inputType[]
   ): Promise<EnhancedAllSettledResult<inputType, outputType>> => {
     const promiseSettledResults = await Promise.all(
-      inputObjects.map(settlePromise(promiseToApply))
+      inputObjects.map(settlePromise(promiseToApply, options?.logStack))
     );
 
     const promiseFulfilledResults = promiseSettledResults

@@ -15,9 +15,11 @@ const waitFor = async (milliseconds?: any): Promise<string> => {
   return `succesfully awaited ${milliseconds} ms`;
 };
 
+const settledOptions = { logStack: false };
+
 const inputValues = [13, 79, undefined, 'blabla'];
 
-const settled = await enhancedAllSettled(waitFor)(inputValues);
+const settled = await enhancedAllSettled(waitFor, settledOptions)(inputValues);
 
 //  settled = {
 //     rejected: [
@@ -45,6 +47,8 @@ const settled = await enhancedAllSettled(waitFor)(inputValues);
 
 - Better mapping to failure reasons (in the classic node implementation, errors instantiated with the Error constructor are mapped to `reason: false`, which is not very helpful)
 
+- Optional logging of the entire stack of errors for better debugging
+
 # Roadmap
 
 Add options for :
@@ -54,5 +58,3 @@ Add options for :
 - A second function to use if you're only interested in successful promises' output
 
 - Optional providing of your own error logging function
-
-- Optional logging of the entire stack of errors

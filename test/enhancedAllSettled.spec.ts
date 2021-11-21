@@ -33,3 +33,28 @@ it('should test basic error / succes case', async () => {
     successful: [13, 79],
   });
 });
+
+it('should log entire stack if logStack option set to true', async () => {
+  const waitFor = async (milliseconds?: any): Promise<string> => {
+    if (!milliseconds) {
+      throw new Error('no duration provided');
+    }
+
+    if (typeof milliseconds !== 'number') {
+      throw 'only numbers are allowed';
+    }
+    await new Promise(resolve => setTimeout(() => resolve(milliseconds), 0));
+
+    return `succesfully awaited ${milliseconds} ms`;
+  };
+
+  const inputValues = [undefined, 'blabla'];
+
+  const options = {
+    logStack: true,
+  };
+
+  const results = await enhancedAllSettled(waitFor, options)(inputValues);
+
+  expect(results.rejected[0].reason).toContain('at new Promise (<anonymous>)');
+});

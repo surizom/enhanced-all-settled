@@ -8,9 +8,11 @@ export type PromiseRejectedResult = {
   status: 'rejected';
 };
 
-const errorToString = (error: any): string => {
+const errorToString = (error: any, logStack?: boolean): string => {
   if (error instanceof Error) {
-    return error.message;
+    const stack = logStack && error.stack ? '\n' + error.stack : '';
+
+    return `${error.message}${stack}`;
   }
   return String(error);
 };
@@ -32,7 +34,10 @@ export const rejectedReason = (promise: PromiseRejectedResult): string =>
   promise.reason;
 
 export const settlePromise =
-  <inputType, outputType>(promise: (obj: inputType) => Promise<outputType>) =>
+  <inputType, outputType>(
+    promise: (obj: inputType) => Promise<outputType>,
+    logStack?: boolean
+  ) =>
   async (object: inputType): Promise<PromiseSettledResult<outputType>> => {
     try {
       const output = await promise(object);
@@ -44,7 +49,7 @@ export const settlePromise =
     } catch (error) {
       return {
         status: 'rejected',
-        reason: errorToString(error),
+        reason: errorToString(error, logStack),
       };
     }
   };
