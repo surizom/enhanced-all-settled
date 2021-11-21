@@ -4,8 +4,15 @@ export type PromiseFulfilledResult<outputType> = {
 };
 
 export type PromiseRejectedResult = {
-  reason: any;
+  reason: string;
   status: 'rejected';
+};
+
+const errorToString = (error: any): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
 };
 
 export type PromiseSettledResult<outputType> =
@@ -21,9 +28,8 @@ export const isRejectedPromise = <outputType>(
   promise: PromiseSettledResult<outputType>
 ): promise is PromiseRejectedResult => promise.status === 'rejected';
 
-export const rejectedReason = (promise: PromiseSettledResult<any>): any =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  isRejectedPromise(promise) && promise.reason;
+export const rejectedReason = (promise: PromiseRejectedResult): string =>
+  promise.reason;
 
 export const settlePromise =
   <inputType, outputType>(promise: (obj: inputType) => Promise<outputType>) =>
@@ -38,7 +44,7 @@ export const settlePromise =
     } catch (error) {
       return {
         status: 'rejected',
-        reason: error,
+        reason: errorToString(error),
       };
     }
   };

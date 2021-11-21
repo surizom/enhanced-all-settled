@@ -1,9 +1,11 @@
 import {
   isFulfilledPromise,
+  isRejectedPromise,
   PromiseSettledResult,
   rejectedReason,
   settlePromise,
 } from './settlePromise';
+import { compact } from './utils';
 
 export type EnhancedPromiseFulfilledResult<inputType> = inputType;
 
@@ -19,16 +21,21 @@ type EnhancedAllSettledResult<inputType, outputType> = {
 };
 
 const segregateInputObjectsByStatus =
-  <inputType, outputType>(objectsToSync: inputType[]) =>
+  <inputType, outputType>(inputObjects: inputType[]) =>
   (promiseResults: PromiseSettledResult<outputType>[]) => {
-    const rejected = objectsToSync
-      .filter((_, index) => promiseResults[index].status === 'rejected')
-      .map((object, index) => ({
-        inputValue: object,
-        reason: rejectedReason(promiseResults[index]),
-      }));
+    const rejected = compact(
+      inputObjects.map((object, index) => {
+        const result = promiseResults[index];
+        return isRejectedPromise(result)
+          ? {
+              inputValue: object,
+              reason: rejectedReason(result),
+            }
+          : undefined;
+      })
+    );
 
-    const successful = objectsToSync.filter(
+    const successful = inputObjects.filter(
       (_, index) => promiseResults[index].status === 'fulfilled'
     );
 
