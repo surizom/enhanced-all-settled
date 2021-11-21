@@ -8,4 +8,4 @@ updates:
     labels:
       - 'dependencies'
     commit-message:
-      prefix: '[DEPENDABOT]'
+      prefix: 'chore'
