@@ -2,6 +2,8 @@
 
 A better implementation of JS internal `Promise.allSettled`
 
+[![codecov](https://codecov.io/gh/surizom/enhanced-all-settled/branch/main/graph/badge.svg?token=RQD385B1MP)](https://codecov.io/gh/surizom/enhanced-all-settled)
+
 # Usage
 
 ```ts
